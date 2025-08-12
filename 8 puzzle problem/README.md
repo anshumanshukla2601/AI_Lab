@@ -42,15 +42,18 @@ Given an **initial configuration**, the program determines whether the puzzle ca
 - **Memory Usage:** Low.
 
 **Pseudocode:**
--Push initial state to stack
--While stack not empty:
--Pop top state
--If state is goal: Success
--Generate all possible moves
--Push unvisited states to stack
--If stack empty: No solution
+```text
+Push initial state to stack
+While stack not empty:
+    Pop top state
+    If state is goal:
+        Success
+    Generate all possible moves
+    Push unvisited states to stack
+If stack empty:
+    No solution
 
-
+```
 ---
 
 ### **2. Breadth-First Search (BFS)**
@@ -60,17 +63,18 @@ Given an **initial configuration**, the program determines whether the puzzle ca
 - **Memory Usage:** High.
 
 **Pseudocode:**
-
+```text
 Enqueue initial state
-Mark as visited
 While queue not empty:
-Dequeue front state
-If state is goal: Success
-Generate all possible moves
-Enqueue unvisited states
-If queue empty: No solution
+    Dequeue front state
+    If state is goal:
+        Success
+    Generate all possible moves
+    Enqueue unvisited states
+If queue empty:
+    No solution
 
-
+```
 ---
 
 ### **3. Heuristic Search (Greedy Best-First Search)**
@@ -79,14 +83,19 @@ If queue empty: No solution
   
 
 **Pseudocode:**
-Initialize min-heap (priority queue) by h(state)
-Push initial state
-While queue not empty:
-Pop state with smallest h
-If h == 0: Goal found
-Generate all possible moves
-Push unvisited states with their h values
-
+```text
+Insert initial state into priority queue with priority = misplaced tiles
+While priority queue not empty:
+    Remove state with smallest priority
+    If state is goal:
+        Success
+    Generate all possible moves
+    For each move:
+        Calculate misplaced tiles
+        Insert into priority queue with that priority
+If priority queue empty:
+    No solution
+```
 
 **Advantages:**
 - Faster than BFS for large state spaces.
@@ -149,6 +158,7 @@ Let:
 ## **Sample Outputs**
 
 ### **DFS**
+```text
 Input State:
 1 2 3
 4 5 6
@@ -156,9 +166,10 @@ Input State:
 
 Output:
 Goal reached!
-
+```
 
 ### **BFS**
+```text
 Input State:
 8 1 2
 0 4 3
@@ -166,9 +177,10 @@ Input State:
 
 Output:
 Goal reached!
-
+```
 
 ### **Heuristic Search**
+```text
 Initial state:
 1 2 3
 4 0 6
@@ -188,7 +200,7 @@ h=0
 7 8 0
 Goal reached!
 
-
+```
 ---
 
 ## **How to Run**
