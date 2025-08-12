@@ -1,178 +1,207 @@
-# 8-Puzzle Solver using BFS and DFS
+# **8-Puzzle Solver: BFS, DFS, and Heuristic Search**
 
 ## **Problem Statement**
-The **8-Puzzle Problem** is a sliding puzzle consisting of a 3x3 grid with 8 numbered tiles (1 to 8) and one empty space (0).  
-The objective is to move the tiles by sliding them into the empty space until the **goal state** is reached:
+The **8-Puzzle Problem** is a sliding puzzle consisting of a 3×3 grid with 8 numbered tiles (`1–8`) and one empty space (`0`).  
+The objective is to slide the tiles into the empty space to reach the **goal state**:
 
-```
 Goal State:
 1 2 3
 4 5 6
 7 8 0
-```
 
-Given an **initial configuration**, determine whether it can be solved using **Depth-First Search (DFS)** and **Breadth-First Search (BFS)** algorithms.
+Given an **initial configuration**, the program determines whether the puzzle can be solved using:
+- **Depth-First Search (DFS)**
+- **Breadth-First Search (BFS)**
+- **Heuristic Search** (Greedy Best-First Search with misplaced tiles heuristic)
 
 ---
 
-## **Objective**
-1. Solve the 8-puzzle problem using **DFS** and **BFS**.
-2. Explore and understand **state space search**.
-3. Compare DFS and BFS in terms of:
+## **Objectives**
+1. Implement **DFS**, **BFS**, and **Heuristic Search** for solving the 8-puzzle.
+2. Understand **state space search** in AI.
+3. Compare the algorithms in terms of:
    - Time complexity
    - Space complexity
-   - Path to solution (if found)
+   - Solution path length
 
 ---
 
-## **Data Structures Used**
-1. **Vector of vectors (`vector<vector<int>>`)**  
-   - Represents the 3x3 puzzle grid.
-
-2. **Stack (`stack<vector<vector<int>>`)**  
-   - Used in DFS to explore depth-first.
-
-3. **Queue (`queue<vector<vector<int>>`)**  
-   - Used in BFS to explore breadth-first.
-
-4. **Set (`set<string>`)**  
-   - Stores visited states to avoid cycles.
-
-5. **Map (optional in BFS)**  
-   - Can store parent-child relationships for reconstructing the path (not implemented here).
+## **State Representation**
+- **`vector<vector<int>>`** (C++ STL) represents the 3×3 puzzle.
+- The empty tile (`0`) can be moved **up, down, left, or right** if within bounds.
+- States are encoded into a **string** for storage in a `set` to track visited configurations.
 
 ---
 
 ## **Algorithms**
 
-### **Depth-First Search (DFS)**
-- Uses a **stack** to explore states.
-- Follows a **path deeply** until reaching the goal or dead end.
-- May get stuck in deep branches but uses **less memory** than BFS.
-  
-**Pseudocode**:
-```
+### **1. Depth-First Search (DFS)**
+- Explores as far as possible along a branch before backtracking.
+- Uses a **stack**.
+- May get stuck in deep branches; not guaranteed to find the shortest solution.
+- **Memory Usage:** Low.
+
+**Pseudocode:**
 Push initial state to stack
-While stack is not empty:
-    Pop top state
-    If state is goal:
-        Success
-    Generate all possible moves (up, down, left, right)
-    Push unvisited states to stack
-If stack empty -> No solution
-```
+While stack not empty:
+Pop top state
+If state is goal: Success
+Generate all possible moves
+Push unvisited states to stack
+If stack empty: No solution
 
-### **Breadth-First Search (BFS)**
-- Uses a **queue** to explore states **level by level**.
-- Guarantees the **shortest solution** if one exists.
-- Requires **more memory** than DFS.
 
-**Pseudocode**:
-```
+---
+
+### **2. Breadth-First Search (BFS)**
+- Explores all nodes at the current depth before moving deeper.
+- Uses a **queue**.
+- **Guarantees the shortest solution** if one exists.
+- **Memory Usage:** High.
+
+**Pseudocode:**
+
 Enqueue initial state
 Mark as visited
-While queue is not empty:
-    Dequeue front state
-    If state is goal:
-        Success
-    Generate all possible moves (up, down, left, right)
-    Enqueue unvisited states
-If queue empty -> No solution
-```
+While queue not empty:
+Dequeue front state
+If state is goal: Success
+Generate all possible moves
+Enqueue unvisited states
+If queue empty: No solution
+
 
 ---
 
-## **State Generation**
-- Locate the **empty tile (0)**.
-- Generate all **possible moves** by sliding adjacent tiles into the empty space:
-  - **Up** (row-1)
-  - **Down** (row+1)
-  - **Left** (col-1)
-  - **Right** (col+1)
-- Encode each state into a **string** to store in `visited` set.
+### **3. Heuristic Search (Greedy Best-First Search)**
+- Uses a **priority queue** to explore states closer to the goal first.
+- The code uses the **misplaced tiles heuristic**:
+  
 
-**Example**:
-```
-Initial State:      Move Up:
-1 2 3              1 0 3
-4 0 6   ---->      4 2 6
-7 5 8              7 5 8
-```
+**Pseudocode:**
+Initialize min-heap (priority queue) by h(state)
+Push initial state
+While queue not empty:
+Pop state with smallest h
+If h == 0: Goal found
+Generate all possible moves
+Push unvisited states with their h values
 
----
 
-## **Utility Functions**
-1. **`genMove(state)`**  
-   - Generates all possible next states from the current state.
+**Advantages:**
+- Faster than BFS for large state spaces.
+- Goal-directed search.
+- Memory usage often lower than BFS.
 
-2. **`encode(state)`**  
-   - Converts a 2D vector into a string key for `visited` set.
-
-3. **`solve(initial_state)`**  
-   - Performs BFS or DFS search.
+**Limitations:**
+- Not guaranteed to find the shortest path.
+- Heuristic choice affects performance.
 
 ---
 
-## **Use Cases**
-- **Artificial Intelligence (AI) search algorithms demonstration**.
-- **Understanding uninformed search strategies**.
-- **Testing performance differences between BFS and DFS**.
-- **Can be extended for A* or IDA* heuristic searches**.
+## **Move Generation**
+From a given state:
+1. Find the location of the empty tile (`0`).
+2. Generate up to 4 possible moves:
+   - **Up**    → swap with tile above.
+   - **Down**  → swap with tile below.
+   - **Left**  → swap with tile to the left.
+   - **Right** → swap with tile to the right.
 
+---
+
+## **Data Structures Used**
+| Purpose                   | Data Structure |
+|---------------------------|---------------|
+| Puzzle grid               | `vector<vector<int>>` |
+| DFS frontier              | `stack`       |
+| BFS frontier              | `queue`       |
+| Heuristic search frontier | `priority_queue` |
+| Visited states tracking   | `set<string>` |
+| Parent mapping (optional) | `map<string, string>` |
+
+---
+
+## **Complexity Analysis**
+Let:
+- **b** = branching factor (≤ 4 for 8-puzzle)
+- **d** = depth of solution
+- **N** = number of states in search space (≤ 9! = 362,880 for 8-puzzle)
+
+| Algorithm         | Time Complexity | Space Complexity | Notes |
+|-------------------|-----------------|------------------|-------|
+| DFS               | O(b^d)          | O(b·d)           | May explore deep, irrelevant paths. |
+| BFS               | O(b^d)          | O(b^d)           | Finds shortest path but high memory usage. |
+| Heuristic Search  | O(b·log b × d) to O(b^d) | O(b^d) | Performance depends heavily on heuristic quality. |
+
+---
+
+## **Comparison Table**
+| Feature             | DFS        | BFS        | Heuristic Search (GBFS) |
+|---------------------|-----------|-----------|--------------------------|
+| Completeness        | No        | Yes       | Yes (with good heuristic)|
+| Optimality          | No        | Yes       | No                       |
+| Memory Usage        | Low       | High      | Moderate                 |
+| Time Complexity     | O(b^d)    | O(b^d)    | O(b·log b × d) to O(b^d) |
+| Search Direction    | Blind     | Blind     | Goal-directed            |
 ---
 
 ## **Sample Outputs**
 
-### **DFS Example**
-**Input State:**
-```
+### **DFS**
+Input State:
 1 2 3
 4 5 6
 8 0 7
-```
-**Output:**
-```
-Success
-```
 
-### **BFS Example**
-**Input State:**
-```
+Output:
+Goal reached!
+
+
+### **BFS**
+Input State:
 8 1 2
 0 4 3
 7 6 5
-```
-**Output:**
-```
-Success
-```
 
----
+Output:
+Goal reached!
 
-## **Comparison of BFS and DFS**
-| Feature           | DFS                           | BFS                            |
-|-------------------|-------------------------------|--------------------------------|
-| Completeness      | Not guaranteed                | Guaranteed if solution exists  |
-| Optimality        | Not optimal                   | Always optimal                 |
-| Memory Usage      | Low                           | High                           |
-| Time Complexity   | O(b^d)                        | O(b^d)                         |
 
-Where:  
-- **b** = branching factor (max 4 for 8-puzzle)  
-- **d** = depth of solution  
+### **Heuristic Search**
+Initial state:
+1 2 3
+4 0 6
+7 5 8
+
+h=2
+1 2 3
+4 0 6
+7 5 8
+h=1
+1 2 3
+4 5 6
+7 0 8
+h=0
+1 2 3
+4 5 6
+7 8 0
+Goal reached!
+
 
 ---
 
 ## **How to Run**
-1. Compile and run the respective C++ file:
+1. Compile and run the required file:
 ```bash
+# DFS
 g++ dfs_8puzzle.cpp -o dfs
 ./dfs
 
+# BFS
 g++ bfs_8puzzle.cpp -o bfs
 ./bfs
-```
 
-2. Modify the **`initial_state`** in `main()` to test different inputs.
-
----
+# Heuristic Search
+g++ heuristic_8puzzle.cpp -o heuristic
+./heuristic
