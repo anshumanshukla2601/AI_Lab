@@ -42,13 +42,13 @@ Given an **initial configuration**, the program determines whether the puzzle ca
 - **Memory Usage:** Low.
 
 **Pseudocode:**
-Push initial state to stack
-While stack not empty:
-Pop top state
-If state is goal: Success
-Generate all possible moves
-Push unvisited states to stack
-If stack empty: No solution
+-Push initial state to stack
+-While stack not empty:
+-Pop top state
+-If state is goal: Success
+-Generate all possible moves
+-Push unvisited states to stack
+-If stack empty: No solution
 
 
 ---
